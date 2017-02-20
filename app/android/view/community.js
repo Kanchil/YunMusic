@@ -11,25 +11,39 @@ import {
   Text,
   View
 } from 'react-native';
-
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import Util from '../utils/util';
+import ShareSong from './shareSong';
 class Community extends Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          动态页面
-        </Text>
-      </View>
-    );
+      return (
+        <ParallaxScrollView
+          style={styles.container}
+          backgroundColor="#A5AAD9"
+          contentBackgroundColor="#fff"
+          parallaxHeaderHeight={200}
+          renderForeground={() => (
+           <View style={{ height: 200, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{color:'#fff'}}>个人信息区域</Text>
+            </View>
+          )}>
+          <View style={{backgroundColor:'#f5f5f5'}}>
+            <ShareSong />
+            <ShareSong />
+            <ShareSong />
+          </View>
+        </ParallaxScrollView>
+      );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width:Util.screen.width,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#fff',
   },
   welcome: {
     fontSize: 20,

@@ -9,32 +9,32 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
+  ScrollView,
   View
 } from 'react-native';
-
+import AdSwiper from './adSwiper';
+import Category from './category';
+import Recommend from './recommend';
+import New from './new';
+import Exclusive from './exclusive';
 class Music extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          音乐页面
-        </Text>
-      </View>
+      <ScrollView style={styles.container}>
+          <AdSwiper />
+          <Category />
+          <Recommend />
+          <New />
+          <Exclusive />
+          <View style={{backgroundColor:'#fff',height:40}}></View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    backgroundColor:'#fff',
   },
 });
 

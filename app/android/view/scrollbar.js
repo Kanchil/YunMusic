@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	View,
 	TouchableOpacity,
+	TouchableHighlight,
 	Text
 } from 'react-native';
 
@@ -13,6 +14,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 class ScrollBar extends Component {
 
+	constructor(props){
+		super(props);
+	}
 	static propTypes = {
 		goToPage: React.PropTypes.func, // 跳转到对应tab的方法
 		activeTab: React.PropTypes.number, // 当前被选中的tab下标
@@ -20,7 +24,13 @@ class ScrollBar extends Component {
 
 		tabNames: React.PropTypes.array, // 保存Tab名称
 		tabIconNames: React.PropTypes.array, // 保存Tab图标
+
 	}
+
+	switchDrawer(){
+		this.props.callFuc(true);
+	}
+
 
 	setAnimationValue({value}) {
 		console.log(value);
@@ -51,7 +61,11 @@ class ScrollBar extends Component {
 	render() {
 		return (
 			<View style={styles.tabs}>
+				<TouchableHighlight onPress={this.switchDrawer.bind(this)}>
+					<Icon style={styles.menu} name="ios-menu-outline" size={30} color="#fff"></Icon>
+				</TouchableHighlight>
 				{this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
+				<Icon style={styles.search} name="ios-search-outline" size={30} color="#fff"></Icon>
 			</View>
 		);
 	}
@@ -61,19 +75,26 @@ const styles = StyleSheet.create({
 	tabs: {
 		flexDirection: 'row',
 		height: 54,
+		alignItems:'center'
 	},
 
 	tab: {
 		flex: 1,
 		justifyContent: 'center',
 		alignItems: 'center',
-        paddingTop:2,
-        paddingBottom:2
+    paddingTop:2,
+    paddingBottom:2
 	},
 
 	tabItem: {
 		flexDirection: 'column',
 		alignItems: 'center',
+	},
+	menu:{
+		marginLeft:10,
+	},
+	search:{
+		marginRight:10
 	}
 });
 

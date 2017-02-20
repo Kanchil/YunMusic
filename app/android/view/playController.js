@@ -134,7 +134,7 @@ class PlayController extends Component {
             onProgress={ this.setTime.bind(this) }
             onEnd={ this.onEnd.bind(this) }
             resizeMode="cover"
-            repeat={false}/>
+            repeat={true}/>
         <View style={styles.songInfo}>
           <Image
             style={styles.thumb}
