@@ -59,9 +59,7 @@ class Home extends Component {
           <View style={styles.content} tabLabel='key2'>
             <User />
           </View>
-          <View style={styles.content} tabLabel='key3'>
-            <Community />
-          </View>
+
         </ScrollableTabView>
         </View>
 

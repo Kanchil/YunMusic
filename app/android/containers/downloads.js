@@ -14,7 +14,7 @@ import Song from '../components/song';
 
 export default class Downloads extends Component {
   onSongPlay(index) {
-    Actions.play({songIndex: index})
+    Actions.play({songIndex: index,islocal:true})
   }
 
   deleteSong(index) {
@@ -28,11 +28,11 @@ export default class Downloads extends Component {
               return <Song
                       key={index}
                       onPress={this.onSongPlay.bind(this, index)}
-                      songName={song.title}
-                      artistName={song.author}
-                      songImage={song.thumb}
+                      songName={song.name}
+                      artistName={song.artist_name}
+                      songImage={song.cover_url}
                       deleteSong={this.deleteSong.bind(this, index)}
-                      islocal={true}
+                      search={false}
                       />
             })
           }

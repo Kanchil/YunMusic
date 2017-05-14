@@ -20,12 +20,12 @@ export class PlayButton extends Component {
 export class ForwardButton extends Component {
   render() {
     let forwardButton = null;
-    if(!this.props.shuffle && this.props.songIndex + 1 === this.props.songs.length ) {
-      forwardButton = <FontAwesome style={ Styles.forward } name="forward" size={25} color="#333" />;
-    } else {
-      forwardButton = <FontAwesome onPress={ this.props.goForward} style={ Styles.forward } name="forward" size={25} color="#fff" />;
-    }
-
+    // if(!this.props.shuffle && this.props.songIndex + 1 === this.props.songs.length ) {
+    //   forwardButton = <FontAwesome style={ Styles.forward } name="forward" size={25} color="#333" />;
+    // } else {
+    //   forwardButton = <FontAwesome onPress={ this.props.goForward} style={ Styles.forward } name="forward" size={25} color="#fff" />;
+    // }
+    forwardButton = <FontAwesome onPress={ this.props.goForward} style={ Styles.forward } name="forward" size={25} color="#fff" />;
     return forwardButton;
   }
 }

@@ -20,6 +20,16 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
+  headerfavoriate: {
+    position: 'absolute',
+    top: 5,
+    right: 0,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+
   headerText: {
     color: "#FFF",
     fontSize: 18,

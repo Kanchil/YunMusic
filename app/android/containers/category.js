@@ -14,22 +14,22 @@ class Category extends Component{
     return (
       <View style={styles.container}>
         <View style={styles.item}>
-          <TouchableHighlight  style={styles.radius} activeOpacity={0.2} underlayColor="#4B3E4D" onPress={()=>Actions.songList({listType:25})}>
+          <TouchableHighlight  style={styles.radius} activeOpacity={0.2} underlayColor="#4B3E4D" onPress={()=>Actions.songList({pos:3})}>
             <Icon name="md-musical-note" size={36} color="#4B3E4D"></Icon>
           </TouchableHighlight>
-          <Text style={styles.itemText}>网络歌曲</Text>
+          <Text style={styles.itemText}>独家发布</Text>
         </View>
         <View style={styles.item}>
-          <TouchableHighlight style={styles.radius} activeOpacity={0.2} underlayColor="#4B3E4D" onPress={()=>Actions.songList({listType:2})}>
+          <TouchableHighlight style={styles.radius} activeOpacity={0.2} underlayColor="#4B3E4D" onPress={()=>Actions.songList({pos:1})}>
             <Icon name="md-star-half" size={36} color="#4B3E4D"></Icon>
           </TouchableHighlight>
           <Text style={styles.itemText}>最推荐</Text>
         </View>
         <View style={styles.item}>
-          <TouchableHighlight style={styles.radius} activeOpacity={0.2} underlayColor="#4B3E4D" onPress={()=>Actions.songList({listType:16})}>
+          <TouchableHighlight style={styles.radius} activeOpacity={0.2} underlayColor="#4B3E4D" onPress={()=>Actions.songList({pos:2})}>
             <Icon name="md-podium" size={36} color="#4B3E4D"></Icon>
           </TouchableHighlight>
-          <Text style={styles.itemText}>排行</Text>
+          <Text style={styles.itemText}>排行榜</Text>
         </View>
       </View>
     )

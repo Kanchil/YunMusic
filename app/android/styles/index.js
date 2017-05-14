@@ -129,17 +129,17 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   songTitleImage: {
     height: 50,
-    width: 50
+    width: 50,
+    marginLeft: 10,
   },
   songTitleContainer: {
     flex: 1,
     flexDirection: "column",
     alignItems: "flex-start",
-    paddingLeft: 10,
     justifyContent: "space-around"
   },
   songArtistText: {

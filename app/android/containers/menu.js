@@ -3,8 +3,11 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   Image,
+  BackAndroid,
+  ToastAndroid,
+  Alert,
   View
 } from 'react-native';
 import Util from '../utils/util';
@@ -12,7 +15,29 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Actions} from 'react-native-router-flux';
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 class Menu extends Component{
+
+  componentWillMount(){
+      BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+      if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+          //最近2秒内按过back键，可以退出应用。
+          return false;
+      }
+      this.lastBackPressed = Date.now();
+      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      return true;
+  }
+
   render(){
+    //关于YunMusic
+    var alertMessage = 'YunMusic 1.1.1_beta';
+
     return (
       <View style={styles.container}>
       <ParallaxScrollView
@@ -37,28 +62,24 @@ class Menu extends Component{
           </View>
         )}>
         <View>
-          <View style={styles.menuItem}>
+          <TouchableOpacity style={styles.menuItem} onPress={()=>Actions.message()}>
             <Icon style={styles.menuIcon} name="ios-mail-outline" size={20} color="#4B3E4D"></Icon>
             <Text style={styles.menuTitle}>我的消息</Text>
-          </View>
-          <View style={styles.menuItem}>
-            <Icon style={styles.menuIcon} name="ios-ribbon-outline" size={20} color="#4B3E4D"></Icon>
-            <Text style={styles.menuTitle}>会员中心</Text>
-          </View>
-          <View style={styles.menuItem}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem} onPress={()=>Actions.favorite({userId:2})}>
             <Icon style={styles.menuIcon} name="ios-cloud-done-outline" size={20} color="#4B3E4D"></Icon>
-            <Text style={styles.menuTitle}>我的音乐云</Text>
-          </View>
-          <View style={styles.menuItem}>
+              <Text style={styles.menuTitle}>我的音乐云</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert('版本号',alertMessage)}>
             <Icon style={styles.menuIcon} name="ios-link-outline" size={20} color="#4B3E4D"></Icon>
             <Text style={styles.menuTitle}>关于YunMusic</Text>
-          </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem} onPress={()=>Actions.login()}>
+            <Icon style={styles.menuIcon} name="ios-contact-outline" size={20} color="#4B3E4D"></Icon>
+            <Text style={styles.menuTitle}>账号管理</Text>
+          </TouchableOpacity>
         </View>
       </ParallaxScrollView>
-      <View style={styles.bottom}>
-        <Text style={[styles.bottomItem,styles.borderRight]}>设置</Text>
-        <Text style={styles.bottomItem}>退出应用</Text>
-      </View>
     </View>
     )
   }
@@ -107,10 +128,11 @@ const styles = StyleSheet.create({
     borderColor:'#ddd'
   },
   bottomItem:{
-    width:100,
-    height:20,
+    width:200,
+    height:25,
     alignItems:'center',
     textAlign:'center',
+    fontSize:16
   },
   borderRight:{
     borderRightWidth:Util.pixel * 2,

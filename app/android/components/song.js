@@ -13,6 +13,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Styles from '../styles';
 import Swipeout from 'react-native-swipeout';
 import * as Progress from 'react-native-progress';
+import Config from '../config/';
 export default class Song extends Component {
   state = {songImage: "../images/korea.png"}
   swipeBtns = this.props.search?([{
@@ -40,7 +41,7 @@ export default class Song extends Component {
       if(this.props.search){
         return (
           <Image
-            source={{uri: this.props.songImage}}
+            source={{uri: Config.API_URL+this.props.songImage}}
             style={Styles.songTitleImage}
           />
         )
@@ -63,29 +64,40 @@ export default class Song extends Component {
   }
   render(){
     return (
-      <Swipeout
-          right={this.swipeBtns}
-          backgroundColor= 'transparent'
-          autoClose={true}
-          >
-          <TouchableOpacity style={Styles.songContainer} onPress={this.props.onPress}>
-            <View style={Styles.songView}>
-              {this.renderThumb()}
-              <View style={Styles.songTitleContainer}>
-                <Text style={Styles.songArtistText}>{this.props.songName || "Unknown Song"}</Text>
-                <Text style={Styles.songTitleText}>{this.props.artistName || "Unknown Artist"}</Text>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.songView} onPress={this.props.onPress}>
+          {this.renderThumb()}
+        </TouchableOpacity>
+        <View style={styles.spContainer}>
+          <Swipeout
+              right={this.swipeBtns}
+              backgroundColor= 'transparent'
+              autoClose={true}
+              >
+              <View style={Styles.songContainer}>
+                <View style={Styles.songView}>
+                  <View style={Styles.songTitleContainer}>
+                    <Text style={Styles.songArtistText}>{this.props.songName || "Unknown Song"}</Text>
+                    <Text style={Styles.songTitleText}>{this.props.artistName || "Unknown Artist"}</Text>
+                  </View>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
-          {this.renderProgressBar()}
-        </Swipeout>
+              {this.renderProgressBar()}
+            </Swipeout>
+        </View>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  songContainer:{
-
+  container:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center'
+  },
+  spContainer:{
+    width:Util.screen.width - 50
   },
   songItem:{
     width:Util.screen.width,

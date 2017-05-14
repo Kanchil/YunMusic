@@ -8,6 +8,9 @@ import {
   TouchableOpacity
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import ActionCreators from '../actions';
 import Util from '../utils/util';
 import IndexSong from '../components/indexSong';
 class Recommend extends Component{
@@ -19,35 +22,30 @@ class Recommend extends Component{
     }
   }
   //通过歌曲id数组获得一组歌曲信息
-  async getSongInfo(songids){
-    const result = [];
-    for (var i = 0; i < songids.length; i++) {
-      const res = await fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.song.play&songid=${songids[i]}`)
-      const resText = await res.json();
-      result.push({
-        song_id:resText.songinfo.song_id,
-        author:resText.songinfo.author,
-        title:resText.songinfo.title,
-        thumb:resText.songinfo.pic_big,
-        path:resText.bitrate.file_link
-      })
-    }
-    return result;
-  }
+  // async getSongInfo(songids){
+  //   const result = [];
+  //   for (var i = 0; i < songids.length; i++) {
+  //     const res = await fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.song.play&songid=${songids[i]}`)
+  //     const resText = await res.json();
+  //     result.push({
+  //       song_id:resText.songinfo.song_id,
+  //       author:resText.songinfo.author,
+  //       title:resText.songinfo.title,
+  //       thumb:resText.songinfo.pic_big,
+  //       path:resText.bitrate.file_link
+  //     })
+  //   }
+  //   return result;
+  // }
 
   componentDidMount(){
-    fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=${this.state.listType}&size=6&offset=0`)
+    // fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=${this.state.listType}&size=6&offset=0`)
+    fetch(`http://101.200.55.241/yunmusicadmin/api.php?s=/index/getSongListByType&album_id=${this.state.listType}&limit=10`)
     .then(res => res.json())
-    .then(resText => {
-      const songids = resText.song_list.map(item => {return item.song_id});
-      this.getSongInfo(songids).then(
-        result => {
-          console.log(result)
-          this.setState({
-            songs:result
-          })
-        }
-      )
+    .then(resText=>{
+      this.setState({
+        songs:resText.data
+      })
     })
   }
   onPress(song) {
@@ -78,10 +76,11 @@ class Recommend extends Component{
               return (
                 <IndexSong
                   key={index}
-                  songImage={song.thumb}
-                  title={song.title}
+                  songImage={song.cover_url}
+                  title={song.name}
                   onPress={this.songClick.bind(this,song,index)}
                   downloadMusic={this.onPress.bind(this, song)}
+                  search={true}
                    />
               )
             })
@@ -90,6 +89,17 @@ class Recommend extends Component{
       </View>
     )
   }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(ActionCreators, dispatch);
+}
+
+function mapStateToProps(store) {
+    return {
+      searchResults: store.searchResults,
+      progreses: store.progreses
+    }
 }
 
 const styles = StyleSheet.create({
@@ -142,4 +152,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Recommend;
+export default connect(mapStateToProps, mapDispatchToProps)(Recommend);

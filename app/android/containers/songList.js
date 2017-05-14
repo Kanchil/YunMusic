@@ -34,37 +34,36 @@ class SongList extends Component{
   songClick(song, index) {
     Actions.play({searchedSongs: this.state.songs, songIndex: index, onMusicDownload: this.onPress.bind(this)})
   }
-  async getSongInfo(songids){
-    const result = [];
-    for (var i = 0; i < songids.length; i++) {
-      const res = await fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.song.play&songid=${songids[i]}`)
-      const resText = await res.json();
-      result.push({
-        song_id:resText.songinfo.song_id,
-        author:resText.songinfo.author,
-        title:resText.songinfo.title,
-        thumb:resText.songinfo.pic_big,
-        path:resText.bitrate.file_link
-      })
-    }
-    return result;
-  }
+  // async getSongInfo(songids){
+  //   const result = [];
+  //   for (var i = 0; i < songids.length; i++) {
+  //     const res = await fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.song.play&songid=${songids[i]}`)
+  //     const resText = await res.json();
+  //     result.push({
+  //       song_id:resText.songinfo.song_id,
+  //       author:resText.songinfo.author,
+  //       title:resText.songinfo.title,
+  //       thumb:resText.songinfo.pic_big,
+  //       path:resText.bitrate.file_link
+  //     })
+  //   }
+  //   return result;
+  // }
   componentDidMount(){
-    const listType = this.props.listType;
+    const pos = this.props.pos;
+    const listType = this.state.listType;
     const result = [];
     InteractionManager.runAfterInteractions(() => {
-      fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=${listType}&size=10&offset=0`)
+      // fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.billboard.billList&type=${listType}&size=10&offset=0`)
+      fetch(`http://101.200.55.241/yunmusicadmin/api.php?s=/index/getSongListByType&album_id=${listType}&position=${pos}`)
       .then(res => res.json())
-      .then(resText => {
-        const songids = resText.song_list.map(item => {return item.song_id});
-        this.getSongInfo(songids).then(result => {
-          console.log(result)
-          this.setState({
-            songs:result,
-            isLoading:false
-          })
+      .then(resText=>{
+        this.setState({
+          songs:resText.data,
+          isLoading:false
         })
-    })
+        console.log(resText.data);
+      })
     })
 
   }
@@ -118,10 +117,10 @@ class SongList extends Component{
                   key={index}
                   orderNum={index+1}
                   onPress={this.songClick.bind(this, song, index)}
-                  songName={song.title}
-                  artistName={song.author}
-                  songImage={song.thumb}
-                  id={song.song_id}
+                  songName={song.name}
+                  artistName={song.artist_name}
+                  songImage={song.cover_url}
+                  id={song.id}
                   progreses={this.props.progreses}
                   downloading={song.downloading}
                   downloadMusic={this.onPress.bind(this, song)}

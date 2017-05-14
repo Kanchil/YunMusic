@@ -34,10 +34,10 @@ class SearchResults extends Component {
             return <Song
                     key={index}
                     onPress={this.songClick.bind(this, song, index)}
-                    songName={song.title}
-                    artistName={song.author}
-                    songImage={song.thumb}
-                    id={song.song_id}
+                    songName={song.name}
+                    artistName={song.artist_name}
+                    songImage={song.cover_url}
+                    id={song.id}
                     progreses={this.props.progreses}
                     downloading={song.downloading}
                     downloadMusic={this.onPress.bind(this, song)}

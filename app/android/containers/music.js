@@ -21,9 +21,9 @@ class Music extends Component {
       <ScrollView style={styles.container}>
           <AdSwiper />
           <Category />
-          <Recommend title="影视金曲" listType="24" />
-          <Recommend title="最新单曲" listType="1" />
-          <Recommend title="欧美金曲" listType="21" />
+          <Recommend title="影视金曲" listType="4" />
+          <Recommend title="最新单曲" listType="5" />
+          <Recommend title="欧美金曲" listType="6" />
           <View style={{backgroundColor:'#fff',height:40}}></View>
       </ScrollView>
     );

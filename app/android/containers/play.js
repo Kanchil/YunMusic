@@ -8,6 +8,8 @@ import {
   Text,
   Platform,
   TouchableOpacity,
+  AsyncStorage,
+  Alert,
   View
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -19,6 +21,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Slider from 'react-native-slider';
 import Video from 'react-native-video';
+import Config from '../config';
 // import MusicControl from 'react-native-music-control';
 import styles from '../styles/play';
 import {ForwardButton, BackwardButton, PlayButton, ShuffleButton, VolumeButton, DownloadButton, SongSlider} from '../components/playBottons';
@@ -35,7 +38,8 @@ class Play extends Component {
       sliding: false,
       currentTime: 0,
       songIndex: props.songIndex,
-      songs: props.searchedSongs || this.props.songs
+      songs: props.searchedSongs || this.props.songs,
+      like:false
     };
   }
 
@@ -56,14 +60,15 @@ class Play extends Component {
   }
 
   goBackward(){
-    if(this.state.currentTime < 3 && this.state.songIndex !== 0 ){
+    if(this.state.songIndex !== 0 ){
       this.setState({
         songIndex: this.state.songIndex - 1,
         currentTime: 0,
       });
     } else {
-      this.refs.audio.seek(0);
+      // this.refs.audio.seek(0);
       this.setState({
+        songIndex: this.state.songs.length - 1,
         currentTime: 0,
       });
     }
@@ -121,8 +126,13 @@ class Play extends Component {
     this.setState({ playing: false });
     this.setState({playing: true});
   }
-
+  componentDidUpdate(){
+    //判断是否已收藏
+    this.isFavoriate();
+  }
   componentDidMount() {
+    //判断是否已收藏
+    this.isFavoriate();
     // MusicControl.enableControl('play', true);
     // MusicControl.enableControl('pause', true);
     // MusicControl.enableControl('nextTrack', true);
@@ -142,29 +152,45 @@ class Play extends Component {
 
   renderVideoPlayer() {
     if(this.state.songs[this.state.songIndex]) {
-    return (<Video
-              source={{uri: this.state.songs[this.state.songIndex].path }}
-              volume={this.state.muted ? 0 : 1.0}
-              muted={false}
-              ref="audio"
-              paused={!this.state.playing}
-              playInBackground={true}
-              onLoad={ this.onLoad.bind(this) }
-              onProgress={ this.setTime.bind(this) }
-              onEnd={ this.onEnd.bind(this) }
-              resizeMode="cover"
-              repeat={false}/>);
+      if(this.props.islocal){
+        return (<Video
+                  source={{uri: (Platform.OS == 'android'?"file://": "") + this.state.songs[this.state.songIndex].listen_url }}
+                  volume={this.state.muted ? 0 : 1.0}
+                  muted={false}
+                  ref="audio"
+                  paused={!this.state.playing}
+                  playInBackground={true}
+                  onLoad={ this.onLoad.bind(this) }
+                  onProgress={ this.setTime.bind(this) }
+                  onEnd={ this.onEnd.bind(this) }
+                  resizeMode="cover"
+                  repeat={false}/>);
+      }else{
+        return (<Video
+                  source={{uri: Config.API_URL+this.state.songs[this.state.songIndex].listen_url }}
+                  volume={this.state.muted ? 0 : 1.0}
+                  muted={false}
+                  ref="audio"
+                  paused={!this.state.playing}
+                  playInBackground={true}
+                  onLoad={ this.onLoad.bind(this) }
+                  onProgress={ this.setTime.bind(this) }
+                  onEnd={ this.onEnd.bind(this) }
+                  resizeMode="cover"
+                  repeat={false}/>);
       }
+
+    }
       return null;
   }
 
   renderThumb(){
     if(this.props.islocal){
-      if (this.state.songs[this.state.songIndex].thumb ) {
+      if (this.state.songs[this.state.songIndex].cover_url ) {
         return (
           <Image
             style={ styles.songImage }
-            source={{uri: (Platform.OS == 'android'?"file://": "") + this.state.songs[this.state.songIndex].thumb,
+            source={{uri: (Platform.OS == 'android'?"file://": "") + this.state.songs[this.state.songIndex].cover_url,
                           width: window.width - 30,
                           height: 300}}
           />
@@ -178,11 +204,11 @@ class Play extends Component {
         )
       }
     }else {
-      if(this.state.songs[this.state.songIndex].thumb){
+      if(this.state.songs[this.state.songIndex].cover_url){
         return (
           <Image
             style={ styles.songImage }
-            source={{uri: this.state.songs[this.state.songIndex].thumb,
+            source={{uri: Config.API_URL+this.state.songs[this.state.songIndex].cover_url,
                           width: window.width - 30,
                           height: 300}}
           />
@@ -196,6 +222,124 @@ class Play extends Component {
         )
       }
     }
+  }
+  //取消收藏
+  cancelFavorite(){
+    let song = this.props.songs[this.state.songIndex] || this.state.songs[this.state.songIndex];
+    let songId = song.id; //歌曲id
+    AsyncStorage.getItem('userInfo',(err,res)=>{
+      if(err){
+        Alert.alert("您还未登陆！");
+        Actions.pop();
+        Actions.login();
+        return false;
+      }
+      let userInfo = JSON.parse(res);
+      if (!userInfo) {
+        Alert.alert("您还未登陆！");
+        Actions.pop();
+        Actions.login();
+        return false;
+      }
+      if (userInfo[0].uid) {
+        let userId = userInfo[0].uid;
+        fetch(`http://101.200.55.241/yunmusicadmin/api.php?s=/index/cancelFavorite&songId=${songId}&userId=${userId}`)
+        .then(res => res.json())
+        .then(resText => {
+          if(resText.status){
+            //取消成功
+            // Alert.alert("取消成功！");
+            this.setState({
+              like:false
+            })
+          }else{
+            // Alert.alert("取消失败！");
+            //失败
+            return false;
+          }
+        })
+      }else {
+        Alert.alert("您还未登陆，请先去登陆！");
+      }
+    });
+  }
+  //判断是否已收藏
+  isFavoriate(){
+    let song = this.props.songs[this.state.songIndex] || this.state.songs[this.state.songIndex];
+    let songId = song.id; //歌曲id
+    AsyncStorage.getItem('userInfo',(err,res)=>{
+      if(err){
+        Alert.alert("您还未登陆！");
+        Actions.pop();
+        Actions.login();
+        return false;
+      }
+      let userInfo = JSON.parse(res);
+      if (!userInfo) {
+        return false;
+      }
+      if (userInfo[0].uid) {
+        let userId = userInfo[0].uid;
+        fetch(`http://101.200.55.241/yunmusicadmin/api.php?s=/index/isFavoriate&songId=${songId}&userId=${userId}`)
+        .then(res => res.json())
+        .then(resText => {
+          console.log(resText)
+          if(resText.status){
+            this.setState({
+              like:true
+            })
+          }else{
+            //未收藏
+            this.setState({
+              like:false
+            })
+          }
+        })
+      }else {
+        return false
+      }
+    });
+  }
+  //收藏
+  favorite(){
+    let song = this.props.songs[this.state.songIndex] || this.state.songs[this.state.songIndex];
+    let songId = song.id; //歌曲id
+    AsyncStorage.getItem('userInfo',(err,res)=>{
+      if(err){
+        Alert.alert("您还未登陆！");
+        Actions.pop();
+        Actions.login();
+        return false;
+      }
+      let userInfo = JSON.parse(res);
+      console.log(userInfo)
+      if (!userInfo) {
+        Alert.alert("您还未登陆！");
+        Actions.pop();
+        Actions.login();
+        return false;
+      }
+      if (userInfo[0].uid) {
+        let userId = userInfo[0].uid;
+        fetch(`http://101.200.55.241/yunmusicadmin/api.php?s=/index/favoriteSong&songId=${songId}&userId=${userId}`)
+        .then(res => res.json())
+        .then(resText => {
+          if(resText.status){
+            // Alert.alert("收藏成功！");
+            //收藏成功
+            this.setState({
+              like:true
+            })
+          }else{
+            // Alert.alert("收藏失败！");
+            //失败
+            return false;
+          }
+        })
+      }else {
+        Alert.alert("您还未登陆，请先去登陆！");
+      }
+    });
   }
 
   render() {
@@ -212,23 +356,28 @@ class Play extends Component {
         {this.renderVideoPlayer()}
         <View style={ styles.header }>
           <Text style={ styles.headerText }>
-            {this.state.songs[this.state.songIndex].author}
+            {this.state.songs[this.state.songIndex].artist_name}
           </Text>
         </View>
         <TouchableOpacity style={ styles.headerClose } onPress={ Actions.pop }>
           <FontAwesome name="chevron-left" size={15} color="#fff" />
         </TouchableOpacity>
-        <DownloadButton
-          download={this.props.searchedSongs}
-          downloading={this.state.songs[this.state.songIndex].downloading}
-          downloadMusic={() => this.props.onMusicDownload(this.state.songs[this.state.songIndex])}
-        />
+        {
+          this.state.like ?
+            <TouchableOpacity style={ styles.headerfavoriate } onPress={this.cancelFavorite.bind(this)}>
+              <FontAwesome name="heart" size={25} color="red" />
+            </TouchableOpacity>
+             :
+             <TouchableOpacity style={ styles.headerfavoriate } onPress={this.favorite.bind(this)}>
+               <FontAwesome name="heart-o" size={25} color="#fff" />
+             </TouchableOpacity>
+         }
         {this.renderThumb()}
         <Text style={ styles.songTitle }>
-          {this.state.songs[this.state.songIndex].title}
+          {this.state.songs[this.state.songIndex].name}
         </Text>
         <Text style={ styles.albumTitle }>
-          {this.state.songs[this.state.songIndex].album_title}
+          {this.state.songs[this.state.songIndex].artist_name}
         </Text>
         <View style={ styles.sliderContainer }>
           <SongSlider
@@ -248,6 +397,10 @@ class Play extends Component {
           />
           <BackwardButton
             goBackward={this.goBackward.bind(this)}
+            songs={this.state.songs}
+            shuffle={this.state.shuffle}
+            songIndex={this.state.songIndex}
+            disabled={this.props.search}
           />
           <PlayButton
             togglePlay={this.togglePlay.bind(this)}

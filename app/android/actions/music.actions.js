@@ -6,37 +6,34 @@ import {AsyncStorage} from 'react-native';
 import RNFS from 'react-native-fs';
 export function downloadMusic(song){
   return async (dispath) => {
-    song.downloading = true;
+    song.listen_url = Config.API_URL+song.listen_url;
+    song.cover_url = Config.API_URL+song.cover_url;
+    song.downloading = false;
     let songs = await Utils.getSongsFromStorage();
-    if (Utils.findSongIncollection(song.song_id,songs)) {
+    if (Utils.findSongIncollection(song.id,songs)) {
       return {};
     }
     let dirs = RNFetchBlob.fs.dirs;
-    // let file_response = await fetch(`http://tingapi.ting.baidu.com/v1/restserver/ting?format=json&calback=&from=webapp_music&method=baidu.ting.song.play&songid=${song.song_id}`)
-    // let file_res = await file_response.json();
-    // const file_link = file_res.bitrate.file_link;
-    // console.log('aa'+file_link);
-    // console.log(song.song_id);
     const songRes = await RNFetchBlob
                     .config({
-                      path:`${dirs.DocumentDir}/${song.song_id}.mp3`
+                      path:`${dirs.DocumentDir}/${song.id}.mp3`
                     })
-                    .fetch('GET',song.path,{})
+                    .fetch('GET',song.listen_url,{})
                     .progress((received,total) => {
-                      dispath(setProgress(received / total),song.song_id);
+                      dispath(setProgress(received / total),song.id);
                     });
     const headers  = songRes.respInfo.headers;
     if (!Utils.isAudioObject(headers['Content-Type'])) {
       return;
     }
     const imgRes = await RNFetchBlob.config({
-      path:`${dirs.DocumentDir}/${song.song_id}.jpg`
+      path:`${dirs.DocumentDir}/${song.id}.jpg`
     })
-    .fetch('GET',song.thumb,{});
+    .fetch('GET',song.cover_url,{});
     song.downloading = false;
     let newSong = {...song};
-    newSong.path = songRes.path();
-    newSong.thumb = imgRes.path();
+    newSong.listen_url = songRes.path();
+    newSong.cover_url = imgRes.path();
     songs = JSON.stringify([...songs,newSong]);
     await AsyncStorage.setItem('songs',songs);
     return dispath(setSongs(JSON.parse(songs)));
@@ -62,8 +59,8 @@ export function deleteSong(index,song){
   return async (dispath) => {
     let songs = await Utils.getSongsFromStorage();
     try {
-      await RNFS.unlink(song.path);
-      await RNFS.unlink(song.thumb);
+      await RNFS.unlink(song.listen_url);
+      await RNFS.unlink(song.cover_url);
       songs.splice(index,1);
       await AsyncStorage.setItem('songs',JSON.stringify(songs));
       return dispath(setSongs(songs));
