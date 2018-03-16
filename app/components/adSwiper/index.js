@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import {  View, Text, Image} from 'react-native';
+import {  View, Text, Image, ImageBackground} from 'react-native';
 
 import PropTypes from 'prop-types';
 
 import Swiper from 'react-native-swiper';
 
-import styles from './index.style';
+import { styles } from './index.style';
 
 export default class AdSwiper extends Component {
 
@@ -20,9 +20,9 @@ export default class AdSwiper extends Component {
     renderSliderItem(item, i) {
         return (
             <View key = { i } style = { styles.slide1 }>
-                <Image style = { styles.adImg } source = {{ uri: item.image_url }}>
+                <ImageBackground style = { styles.adImg } source = {{ uri: item.image_url }}>
                     <Text style = { styles.text }>{ item.title }</Text>
-                </Image>
+                </ImageBackground>
             </View>
         );
     }
