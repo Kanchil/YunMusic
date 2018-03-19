@@ -23,7 +23,7 @@ export default class Category extends Component {
             </View>
             <View style = { styles.item }>
                 <TouchableHighlight style = { styles.radius } activeOpacity = { 0.2 } underlayColor = "#4B3E4D" onPress={ ()=>Actions.songList({ pos: 2 }) }>
-                    <Icon name="md-podium" size={36} color="#4B3E4D"></Icon>
+                    <Icon name = "md-podium" size = { 36 } color = "#4B3E4D"></Icon>
                 </TouchableHighlight>
                 <Text style = { styles.itemText }>排行榜</Text>
             </View>

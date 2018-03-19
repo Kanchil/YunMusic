@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  View, Text, Image, ImageBackground} from 'react-native';
+import {  View, Text, ImageBackground} from 'react-native';
 
 import PropTypes from 'prop-types';
 
