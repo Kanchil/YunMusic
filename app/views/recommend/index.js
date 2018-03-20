@@ -26,19 +26,19 @@ class Recommend extends Component {
 
     onPress(song) {
         console.log(song);
-        // this.props.downloadMusic(song);
+        this.props.downloadMusic(song);
     }
 
     getMore() {
-        // Actions.songList({ listType: this.state.listType });
+        Actions.songList({ listType: this.state.listType });
     }
 
     songClick(song, index) {
-        // Actions.play({ 
-        //     searchedSongs: this.state.songs, 
-        //     songIndex:index, 
-        //     onMusicDownload: this.onPress.bind(this) 
-        // });
+        Actions.play({ 
+            searchedSongs: this.state.songs, 
+            songIndex:index, 
+            onMusicDownload: this.onPress.bind(this) 
+        });
     }
 
     renderSongs(song, index) {
