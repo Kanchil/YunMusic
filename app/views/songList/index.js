@@ -19,13 +19,14 @@ import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import Song from '../../components/song';
 
 import { styles } from './index.style';
-import { getSongs } from '../../api/song';
+import { getSongs, getSongsByAlbum, getSongsByPosition } from '../../api/song';
 class SongList extends Component{
   constructor(props){
     super(props);
     this.state = {
       songs:[],
-      listType:props.listType,
+      listType: props.listType,
+      cid: props.cid,
       isLoading:true
     }
   }
@@ -37,18 +38,26 @@ class SongList extends Component{
     Actions.play({searchedSongs: this.state.songs, songIndex: index, onMusicDownload: this.onPress.bind(this)})
   }
   componentDidMount(){
-    const pos = this.props.pos;
-    const listType = this.state.listType;
+    let cid = this.state.cid;
     const result = [];
     InteractionManager.runAfterInteractions(() => {
-        console.log(getSongs(listType, pos))
-        getSongs(listType, pos).then(data => {
+        if (this.state.listType === 'album') {
+            getSongsByAlbum(cid).then(data => {
+              console.log(data)
+              this.setState({
+                  songs: data,
+                  isLoading: false
+              })
+            })
+        } else if (this.state.listType === 'position') {
+          getSongsByPosition(cid).then(data => {
             console.log(data)
             this.setState({
                 songs: data,
                 isLoading: false
             })
-        })
+          })
+        }
     })
 
   }

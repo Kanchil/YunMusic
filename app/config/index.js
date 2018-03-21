@@ -1,4 +1,4 @@
 export default {
-  BASE_URL: 'http://www.yunmusicadmin.com/api.php?s=',
-  SEARCH_API_URL: 'http://www.yunmusicadmin.com/yunmusicadmin/api.php?s=/index/searchSongByName&songname='
+  BASE_URL: 'http://music.mai516.com//api.php?s=',
+  SEARCH_API_URL: 'http://music.mai516.com/api.php?s=/index/searchSongByName&songname='
 }

@@ -16,7 +16,8 @@ class Recommend extends Component {
         super(props);
         this.state = {
             songs: [],
-            listType: this.props.listType
+            listType: this.props.listType,
+            cid: this.props.cid
         };
     }
 
@@ -30,7 +31,7 @@ class Recommend extends Component {
     }
 
     getMore() {
-        Actions.songList({ listType: this.state.listType });
+        Actions.songList({ listType: this.state.listType, cid: this.state.cid });
     }
 
     songClick(song, index) {

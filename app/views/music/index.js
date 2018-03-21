@@ -38,9 +38,9 @@ export default class Music extends Component {
       <ScrollView style = { styles.container } >
           <AdSwiper items = { this.state.swipers } />
           <Category />
-          <Recommend title = "影视金曲" listType="4" />
-          <Recommend title = "最新单曲" listType="5" />
-          <Recommend title = "欧美金曲" listType="6" />
+          <Recommend title = "影视金曲" listType="album" cid="1" />
+          <Recommend title = "最新单曲" listType="album" cid="2" />
+          <Recommend title = "欧美金曲" listType="album" cid="3" />
           <View style = {{ backgroundColor: '#fff', height: 40 }}></View>
       </ScrollView>
     );

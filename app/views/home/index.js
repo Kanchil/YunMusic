@@ -26,6 +26,7 @@ export default class Home extends Component {
             drawerState: state
         })
     }
+
     render() {
         let tabNames = this.state.tabNames;
 		let tabIconNames = this.state.tabIconNames;
