@@ -1,6 +1,7 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
 let {width} = Dimensions.get('window');
+const window = Dimensions.get('window');
 export const styles = StyleSheet.create({
     container: {
         flex: 1,

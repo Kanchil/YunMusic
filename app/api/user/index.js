@@ -7,7 +7,7 @@ import getData from '../../utils/fetch';
  */
 export function login(param) {
     return getData({
-        url: `api.php?s=/index/login`,
+        url: `/index/login`,
         method: 'post',
         data: {
             ...param
