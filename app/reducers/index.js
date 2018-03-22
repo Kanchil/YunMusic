@@ -4,4 +4,4 @@ import {
 
 import * as api from './api.reducer';
 
-export default combineReducers({ ...api });
+export default combineReducers({...api});

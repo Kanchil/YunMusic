@@ -15,7 +15,8 @@ export const songs = createReducer([], {
 export const progress = createReducer({}, {
     [types.PROGRESS](state, action) {
         state[action.id] = action.progress;
-        return { ...state
+        return {
+            ...state
         };
     }
 })

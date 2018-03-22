@@ -3,7 +3,6 @@ import {
     View,
     Image,
     Text,
-    StyleSheet,
     TouchableOpacity,
     Platform
 } from 'react-native';
@@ -13,7 +12,8 @@ import Swipeout from 'react-native-swipeout';
 import * as Progress from 'react-native-progress';
 import Config from '../../config';
 
-import { styles } from './index.style';
+import {styles} from './index.style';
+
 export default class Song extends Component {
     state = {
         songImage: "../../assets/images/korea.png"
@@ -27,8 +27,8 @@ export default class Song extends Component {
                             name="download"
                             size={25}
                             color={this.props.downloading
-                            ? '#333'
-                            : '#fff'}/>
+                                ? '#333'
+                                : '#fff'}/>
                     </View>
                 ),
                 onPress: this.props.downloading
@@ -49,42 +49,44 @@ export default class Song extends Component {
         ])
 
     renderProgressBar() {
-        if (!this.props.progreses) 
+        if (!this.props.progreses)
             return null;
         var progress = this.props.progreses[this.props.id];
-        if (this.props.search && (progress && progress > 0 && progress < 0.87)) 
+        if (this.props.search && (progress && progress > 0 && progress < 0.87))
             return <Progress.Bar
                 progress={progress}
                 width={width - 20}
                 style={{
-                marginLeft: 10
-            }}
+                    marginLeft: 10
+                }}
                 color="#c8c3c3"
                 borderColor="transparent"/>
-        else 
+        else
             return null
     }
+
     renderThumb() {
         if (this.props.songImage) {
             if (this.props.search) {
                 return (<Image
                     source={{
-                    uri: Config.API_URL + this.props.songImage
-                }}
+                        uri: Config.API_URL + this.props.songImage
+                    }}
                     style={styles.songTitleImage}/>)
             } else {
                 return (<Image
                     source={{
-                    uri: (Platform.OS == 'android'
-                        ? 'file://'
-                        : "") + this.props.songImage
-                }}
+                        uri: (Platform.OS == 'android'
+                            ? 'file://'
+                            : "") + this.props.songImage
+                    }}
                     style={styles.songTitleImage}/>)
             }
         } else {
             return (<Image source={require('../../assets/images/korea.png')} style={styles.songTitleImage}/>)
         }
     }
+
     render() {
         return (
             <View style={styles.container}>
@@ -97,7 +99,8 @@ export default class Song extends Component {
                             <View style={styles.songView}>
                                 <View style={styles.songTitleContainer}>
                                     <Text style={styles.songArtistText}>{this.props.songName || "Unknown Song"}</Text>
-                                    <Text style={styles.songTitleText}>{this.props.artistName || "Unknown Artist"}</Text>
+                                    <Text
+                                        style={styles.songTitleText}>{this.props.artistName || "Unknown Artist"}</Text>
                                 </View>
                             </View>
                         </View>

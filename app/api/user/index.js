@@ -1,6 +1,11 @@
 import getData from '../../utils/fetch';
 
-export function login(param){
+/**
+ * 登录
+ * @param param
+ * @return {AxiosPromise}
+ */
+export function login(param) {
     return getData({
         url: `api.php?s=/index/login`,
         method: 'post',
@@ -10,7 +15,12 @@ export function login(param){
     })
 }
 
-export function register(param){
+/**
+ * 注册
+ * @param param
+ * @return {AxiosPromise}
+ */
+export function register(param) {
     return getData({
         url: `api.php?s=/index/register`,
         method: 'post',

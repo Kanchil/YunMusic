@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-import { width } from '../../utils'
+import {width} from '../../utils'
 
 export const styles = StyleSheet.create({
     homeContainer: {

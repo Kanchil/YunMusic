@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import {  View, Text, TouchableOpacity } from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 
-import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import {Actions} from 'react-native-router-flux';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import ActionCreators from '../../actions';
 
-import { styles } from './index.style';
+import {styles} from './index.style';
 
 import IndexSong from '../../components/indexSong';
 
@@ -31,38 +31,39 @@ class Recommend extends Component {
     }
 
     getMore() {
-        Actions.songList({ listType: this.state.listType, cid: this.state.cid });
+        Actions.songList({listType: this.state.listType, cid: this.state.cid});
     }
 
     songClick(song, index) {
-        Actions.play({ 
-            searchedSongs: this.state.songs, 
-            songIndex:index, 
-            onMusicDownload: this.onPress.bind(this) 
+        Actions.play({
+            searchedSongs: this.state.songs,
+            songIndex: index,
+            onMusicDownload: this.onPress.bind(this)
         });
     }
 
     renderSongs(song, index) {
         return (
-            <IndexSong key={ index }
-                songImage = { song.cover_url } 
-                title = { song.name }
-                onPress = { this.songClick.bind(this,song,index) }
-                downloadMusic = { this.onPress.bind(this, song) }
-                search = { true } />
+            <IndexSong key={index}
+                       songImage={song.cover_url}
+                       title={song.name}
+                       onPress={this.songClick.bind(this, song, index)}
+                       downloadMusic={this.onPress.bind(this, song)}
+                       search={true}/>
         );
     }
+
     render() {
         return (
-            <View style = { styles.container }>
-                <View style = { styles.conTop }>
-                    <Text style = { styles.conTitle }>{ this.props.title }</Text>
-                    <TouchableOpacity onPress = { this.getMore.bind(this) }>
-                        <Text style = { styles.conMore }>更多&gt;</Text>
+            <View style={styles.container}>
+                <View style={styles.conTop}>
+                    <Text style={styles.conTitle}>{this.props.title}</Text>
+                    <TouchableOpacity onPress={this.getMore.bind(this)}>
+                        <Text style={styles.conMore}>更多&gt;</Text>
                     </TouchableOpacity>
                 </View>
-                <View style = { styles.conContainer }>
-                    { this.state.songs.map((song,index) => this.renderSongs(song, index)) }
+                <View style={styles.conContainer}>
+                    {this.state.songs.map((song, index) => this.renderSongs(song, index))}
                 </View>
             </View>
         );

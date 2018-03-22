@@ -16,7 +16,7 @@ module.exports = {
             .then((responseJson) => {
                 successCallback(responseJson);
             }).catch((err) => {
-                failCallback(err);
-            })
+            failCallback(err);
+        })
     }
 }

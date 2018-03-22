@@ -1,54 +1,54 @@
 import React, {
-  Component
+    Component
 } from 'react';
 import {
-  StyleSheet,
-  ScrollView,
-  View
+    StyleSheet,
+    ScrollView,
+    View
 } from 'react-native';
 
-import AdSwiper from '../../components/adSwiper/';
-import Category from '../category/';
-import Recommend from '../recommend/';
+import AdSwiper from '../../components/adSwiper';
+import Category from '../category';
+import Recommend from '../recommend';
 
 export default class Music extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      swipers: [
-        {
-          title: '【高燃】 游戏原声集锦',
-          image_url: 'http://fakeimg.pl/350x180/ff0000'
-        },
-        {
-          title: '朗月清风 笙歌满路',
-          image_url: 'http://fakeimg.pl/350x180/00ff00'
-        },
-        {
-          title: '那些年追过的动漫音乐精选',
-          image_url: 'http://fakeimg.pl/350x180/0000ff'
+    constructor(props) {
+        super(props);
+        this.state = {
+            swipers: [
+                {
+                    title: '【高燃】 游戏原声集锦',
+                    image_url: 'http://fakeimg.pl/350x180/ff0000'
+                },
+                {
+                    title: '朗月清风 笙歌满路',
+                    image_url: 'http://fakeimg.pl/350x180/00ff00'
+                },
+                {
+                    title: '那些年追过的动漫音乐精选',
+                    image_url: 'http://fakeimg.pl/350x180/0000ff'
+                }
+            ]
         }
-      ]
     }
-  }
 
-  render() {
-    return ( 
-      <ScrollView style = { styles.container } >
-          <AdSwiper items = { this.state.swipers } />
-          <Category />
-          <Recommend title = "影视金曲" listType="album" cid="1" />
-          <Recommend title = "最新单曲" listType="album" cid="2" />
-          <Recommend title = "欧美金曲" listType="album" cid="3" />
-          <View style = {{ backgroundColor: '#fff', height: 40 }}></View>
-      </ScrollView>
-    );
-  }
+    render() {
+        return (
+            <ScrollView style={styles.container}>
+                <AdSwiper items={this.state.swipers}/>
+                <Category/>
+                <Recommend title="影视金曲" listType="album" cid="1"/>
+                <Recommend title="最新单曲" listType="album" cid="2"/>
+                <Recommend title="欧美金曲" listType="album" cid="3"/>
+                <View style={{backgroundColor: '#fff', height: 40}}></View>
+            </ScrollView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-  }
+    container: {
+        backgroundColor: '#fff',
+    }
 });

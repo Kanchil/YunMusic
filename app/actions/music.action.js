@@ -6,6 +6,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import * as types from './types';
 import Config from '../config/';
 import * as Utils from '../helpers/utils';
+
 export function downloadMusic(song) {
     return async (dispath) => {
         song.listen_url = Config.API_URL + song.listen_url;
@@ -29,11 +30,11 @@ export function downloadMusic(song) {
             return;
         }
         const imgRes = await RNFetchBlob.config({
-                path: `${dirs.DocumentDir}/${song.id}.jpg`
-            })
+            path: `${dirs.DocumentDir}/${song.id}.jpg`
+        })
             .fetch('GET', song.cover_url, {});
         song.downloading = false;
-        let newSong = { ...song };
+        let newSong = {...song};
         newSong.listen_url = songRes.path();
         newSong.cover_url = imgRes.path();
         songs = JSON.stringify([...songs, newSong]);
