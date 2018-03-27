@@ -24,22 +24,18 @@ class Register extends Component {
     }
 
     register() {
-        let formData = new FormData();
-        formData.append("username", this.state.nickname);
-        formData.append("password", this.state.password);
-        register(formData).then(res => res.json())
-            .then(resText => {
-                console.log(resText);
-                if (resText.status) {
-                    Alert.alert(resText.message)
-                    Actions.pop();
-                    Actions.login();
-                } else {
-                    Alert.alert(resText.message)
-                }
-            })
+        let param = {
+            username: this.state.nickname,
+            password: this.state.password
+        }
+        register(param).then(() => {
+            Alert.alert('注册成功')
+            Actions.pop();
+            Actions.login();
+        }).catch(error => {
+            Alert.alert(error.message)
+        })
     }
-
     render() {
         return (
             <View style={styles.container}>

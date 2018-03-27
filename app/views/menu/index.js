@@ -68,10 +68,6 @@ export default class Menu extends Component {
                         </View>
                     )}>
                     <View>
-                        <TouchableOpacity style={styles.menuItem} onPress={() => Actions.message()}>
-                            <Icon style={styles.menuIcon} name="ios-mail-outline" size={20} color="#4B3E4D"></Icon>
-                            <Text style={styles.menuTitle}>我的消息</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.menuItem}
                             onPress={() => Actions.favorite({userId: 2})}>

@@ -8,7 +8,6 @@ import reducer from './app/reducers';
 import Home from './app/views/home';
 import Login from './app/views/login';
 import Register from './app/views/register';
-import LocalSongList from './app/views/localSongList';
 import SongList from './app/views/songList';
 import Play from './app/views/play';
 import LocalHome from './app/views/localHome';
@@ -49,11 +48,12 @@ export default class App extends Component {
                     component={Play} 
                     title="播放" 
                     hideNavBar={true} />
-                <Scene key="localSongList" 
+                <Scene key="localSongList"
                        leftButtonIconStyle={{tintColor:'#333'}}
-                       component={LocalHome} 
+                       component={LocalHome}
                        title="本地音乐" 
                        hideNavBar={false} />
+                <Scene key="search" component={Search} title="搜索" hideNavBar={true}/>
             </Stack>
         </Router>
       </Provider>

@@ -24,26 +24,23 @@ export default class Login extends Component {
     }
 
     login() {
-        let formData = new FormData();
-        formData.append("username", this.state.nickname);
-        formData.append("password", this.state.password);
-        login(formData).then(responseText => {
-            console.log(responseText);
-            if (responseText.status) { //登陆成功
-                $userInfo = responseText.data;
-                //存储用户信息到本地
-                AsyncStorage.setItem('userInfo', JSON.stringify($userInfo), (err, res) => {
-                    if (err) {
-                        Alert.alert("发生未知错误！请重新登陆！");
-                        return false;
-                    }
-                });
-                Alert.alert(responseText.message);
-                Actions.pop();
-                Actions.home();
-            } else {
-                Alert.alert(responseText.message)
-            }
+        let formData = new FormData()
+        formData.append('username', this.state.nickname)
+        formData.append('password', this.state.password)
+        login(formData).then(data => {
+            console.log(data);
+            $userInfo = data;
+            //存储用户信息到本地
+            AsyncStorage.setItem('userInfo', JSON.stringify($userInfo), (err, res) => {
+                if (err) {
+                    Alert.alert("发生未知错误！请重新登陆！");
+                    return false;
+                }
+            });
+            Actions.pop();
+            Actions.home();
+        }).catch(error => {
+            Alert.alert(error.message)
         })
     }
 

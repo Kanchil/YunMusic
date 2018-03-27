@@ -115,11 +115,13 @@ class Play extends Component {
 
     onSlidingChange(value) {
         let newPosition = value * this.state.songDuration;
+        console.log('a')
         this.setState({currentTime: newPosition});
     }
 
     onSlidingComplete() {
         this.refs.audio.seek(this.state.currentTime);
+        console.log(this.state.currentTime, 'this.state.currentTime')
         this.setState({sliding: false});
     }
 
@@ -154,8 +156,9 @@ class Play extends Component {
                     resizeMode="cover"
                     repeat={false}/>);
             } else {
+                console.log(Config.FILE_URL + this.state.songs[this.state.songIndex].listen_url, 'ddd')
                 return (<Video
-                    source={{uri: Config.API_URL + this.state.songs[this.state.songIndex].listen_url}}
+                    source={{uri: Config.FILE_URL + this.state.songs[this.state.songIndex].listen_url}}
                     volume={this.state.muted ? 0 : 1.0}
                     muted={false}
                     ref="audio"
@@ -199,7 +202,7 @@ class Play extends Component {
                     <Image
                         style={styles.songImage}
                         source={{
-                            uri: Config.API_URL + this.state.songs[this.state.songIndex].cover_url,
+                            uri: Config.FILE_URL + this.state.songs[this.state.songIndex].cover_url,
                             width: window.width - 30,
                             height: 300
                         }}
@@ -346,6 +349,8 @@ class Play extends Component {
         } else {
             songPercentage = 0;
         }
+
+        console.log(songPercentage)
 
         return (
             <View style={styles.container}>
