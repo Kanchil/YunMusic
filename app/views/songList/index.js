@@ -38,7 +38,6 @@ class SongList extends Component {
     songClick(song, index) {
         Actions.play({searchedSongs: this.state.songs, songIndex: index, onMusicDownload: this.onPress.bind(this)})
     }
-
     componentDidMount() {
         let cid = this.state.cid;
         const result = [];

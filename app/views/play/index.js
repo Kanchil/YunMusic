@@ -20,6 +20,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Slider from 'react-native-slider';
 import Video from 'react-native-video';
 
+import { isFavoriate, favoriteSong, cancelFavorite } from '../../api/user'
+
 import {
     ForwardButton,
     BackwardButton,
@@ -40,6 +42,7 @@ class Play extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            userId: 0,
             playing: true,
             muted: false,
             shuffle: false,
@@ -49,10 +52,6 @@ class Play extends Component {
             songs: props.searchedSongs || this.props.songs,
             like: false
         };
-    }
-
-    componentDidMount() {
-        console.log(this.props.songs)
     }
 
     togglePlay() {
@@ -115,24 +114,17 @@ class Play extends Component {
 
     onSlidingChange(value) {
         let newPosition = value * this.state.songDuration;
-        console.log('a')
         this.setState({currentTime: newPosition});
     }
 
     onSlidingComplete() {
         this.refs.audio.seek(this.state.currentTime);
-        console.log(this.state.currentTime, 'this.state.currentTime')
         this.setState({sliding: false});
     }
 
     onEnd() {
         this.setState({playing: false});
         this.setState({playing: true});
-    }
-
-    componentDidUpdate() {
-        //判断是否已收藏
-        this.isFavoriate();
     }
 
     componentDidMount() {
@@ -156,7 +148,6 @@ class Play extends Component {
                     resizeMode="cover"
                     repeat={false}/>);
             } else {
-                console.log(Config.FILE_URL + this.state.songs[this.state.songIndex].listen_url, 'ddd')
                 return (<Video
                     source={{uri: Config.FILE_URL + this.state.songs[this.state.songIndex].listen_url}}
                     volume={this.state.muted ? 0 : 1.0}
@@ -218,126 +209,95 @@ class Play extends Component {
             }
         }
     }
-
+    // 判断是否已经登录
+    async isLogin() {
+        return await storage.load({
+            key: 'userInfo'
+        }).then(ret => {
+            if (ret.length > 0 && ret[0].uid) {
+                this.setState({userId: ret.uid});
+            } else {
+                Alert.alert("您还未登陆！");
+                Actions.pop();
+                Actions.login();
+            }
+        }).catch(() => {
+            Alert.alert("您还未登陆！");
+            Actions.pop();
+            Actions.login();
+        })
+    }
     //取消收藏
-    cancelFavorite() {
+    async cancelFavorite() {
         let song = this.props.songs[this.state.songIndex] || this.state.songs[this.state.songIndex];
         let songId = song.id; //歌曲id
-        AsyncStorage.getItem('userInfo', (err, res) => {
-            if (err) {
-                Alert.alert("您还未登陆！");
-                Actions.pop();
-                Actions.login();
-                return false;
+        await this.isLogin().then(() => {
+            let param = {
+                songId: songId,
+                userId: this.state.userId
             }
-            let userInfo = JSON.parse(res);
-            if (!userInfo) {
-                Alert.alert("您还未登陆！");
-                Actions.pop();
-                Actions.login();
-                return false;
-            }
-            if (userInfo[0].uid) {
-                let userId = userInfo[0].uid;
-                fetch(`http://101.200.55.241/yunmusicadmin/api.php?s=/index/cancelFavorite&songId=${songId}&userId=${userId}`)
-                    .then(res => res.json())
-                    .then(resText => {
-                        if (resText.status) {
-                            //取消成功
-                            // Alert.alert("取消成功！");
-                            this.setState({
-                                like: false
-                            })
-                        } else {
-                            // Alert.alert("取消失败！");
-                            //失败
-                            return false;
-                        }
+            cancelFavorite(param).then(data => {
+                if (data) {
+                    this.setState({
+                        like: false
                     })
-            } else {
-                Alert.alert("您还未登陆，请先去登陆！");
-            }
-        });
+                    Alert.alert("取消成功！");
+                } else {
+                    Alert.alert("取消失败！");
+                    return false;
+                }
+            }).catch(error => {
+                Alert.alert(error.message)
+            })
+        })
     }
-
     //判断是否已收藏
-    isFavoriate() {
+    async isFavoriate() {
         let song = this.props.songs[this.state.songIndex] || this.state.songs[this.state.songIndex];
         let songId = song.id; //歌曲id
-        AsyncStorage.getItem('userInfo', (err, res) => {
-            if (err) {
-                Alert.alert("您还未登陆！");
-                Actions.pop();
-                Actions.login();
-                return false;
+        await this.isLogin().then(() => {
+            let param = {
+                songId: songId,
+                userId: this.state.userId
             }
-            let userInfo = JSON.parse(res);
-            if (!userInfo) {
-                return false;
-            }
-            if (userInfo[0].uid) {
-                let userId = userInfo[0].uid;
-                fetch(`http://101.200.55.241/yunmusicadmin/api.php?s=/index/isFavoriate&songId=${songId}&userId=${userId}`)
-                    .then(res => res.json())
-                    .then(resText => {
-                        console.log(resText)
-                        if (resText.status) {
-                            this.setState({
-                                like: true
-                            })
-                        } else {
-                            //未收藏
-                            this.setState({
-                                like: false
-                            })
-                        }
+            isFavoriate(param).then((data) => {
+                if (data) {
+                    this.setState({
+                        like: true
                     })
-            } else {
-                return false
-            }
-        });
+                } else {
+                    this.setState({
+                        like: false
+                    })
+                }
+            }).catch(error => {
+                Alert.alert(error.message)
+            })
+        })
     }
-
     //收藏
-    favorite() {
+    async favorite() {
         let song = this.props.songs[this.state.songIndex] || this.state.songs[this.state.songIndex];
         let songId = song.id; //歌曲id
-        AsyncStorage.getItem('userInfo', (err, res) => {
-            if (err) {
-                Alert.alert("您还未登陆！");
-                Actions.pop();
-                Actions.login();
-                return false;
+        await this.isLogin().then(() => {
+            let param = {
+                songId: songId,
+                userId: this.state.userId
             }
-            let userInfo = JSON.parse(res);
-            console.log(userInfo)
-            if (!userInfo) {
-                Alert.alert("您还未登陆！");
-                Actions.pop();
-                Actions.login();
-                return false;
-            }
-            if (userInfo[0].uid) {
-                let userId = userInfo[0].uid;
-                fetch(`http://101.200.55.241/yunmusicadmin/api.php?s=/index/favoriteSong&songId=${songId}&userId=${userId}`)
-                    .then(res => res.json())
-                    .then(resText => {
-                        if (resText.status) {
-                            // Alert.alert("收藏成功！");
-                            //收藏成功
-                            this.setState({
-                                like: true
-                            })
-                        } else {
-                            // Alert.alert("收藏失败！");
-                            //失败
-                            return false;
-                        }
+            favoriteSong(param).then(data => {
+                if (data) {
+                    this.setState({
+                        like: true
                     })
-            } else {
-                Alert.alert("您还未登陆，请先去登陆！");
-            }
-        });
+                    Alert.alert("收藏成功！");
+                } else {
+                    Alert.alert("收藏失败！");
+                    return false;
+                }
+            }).catch(error => {
+                Alert.alert(error.message)
+            })
+        })
     }
 
 
@@ -349,9 +309,6 @@ class Play extends Component {
         } else {
             songPercentage = 0;
         }
-
-        console.log(songPercentage)
-
         return (
             <View style={styles.container}>
                 {this.renderVideoPlayer()}

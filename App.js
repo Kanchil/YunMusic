@@ -13,7 +13,15 @@ import Play from './app/views/play';
 import LocalHome from './app/views/localHome';
 import Search from './app/views/search';
 import AlbumList from './app/views/albumList';
+import Storage from 'react-native-storage';
+import { AsyncStorage } from 'react-native';
 
+var storage = new Storage({
+    size: 1000,
+    storageBackend: AsyncStorage,
+    defaultExpires: 1000 * 3600 * 24,
+});
+global.storage = storage;
 const store = createStore(reducer, applyMiddleware(thunk));
 
 export default class App extends Component {

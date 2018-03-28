@@ -23,25 +23,22 @@ export default class Login extends Component {
         this.login = this.login.bind(this);
     }
 
-    login() {
+    async login() {
         let formData = new FormData()
         formData.append('username', this.state.nickname)
         formData.append('password', this.state.password)
-        login(formData).then(data => {
-            console.log(data);
-            $userInfo = data;
+        await login(formData).then(data => {
             //存储用户信息到本地
-            AsyncStorage.setItem('userInfo', JSON.stringify($userInfo), (err, res) => {
-                if (err) {
-                    Alert.alert("发生未知错误！请重新登陆！");
-                    return false;
-                }
-            });
-            Actions.pop();
-            Actions.home();
+             storage.save({
+                key: 'userInfo',
+                data: data,
+                expires: 1000 * 3600
+            })
         }).catch(error => {
             Alert.alert(error.message)
+            return false
         })
+        Actions.pop();
     }
 
 

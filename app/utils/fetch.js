@@ -15,7 +15,7 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(config => {
     // Do something before request is sent
-    console.log(config, 'config')
+    console.log(config, 'request')
     return config
 }, error => {
     // Do something with request error
@@ -25,13 +25,13 @@ service.interceptors.response.use(
     respond => {
         console.log(respond, 'response')
         let res = respond.data
-        switch (res.errorCode) {
+        switch (res.errorcode) {
             case 200:
                 if (typeof res.data === 'object') {
                     return Promise.resolve(res.data)
                 }
                 try {
-                    let data = JSON.parse(res.data)
+                    let data = res.data ? JSON.parse(res.data) : true
                     return Promise.resolve(data)
                 } catch (e) {
                     throw e

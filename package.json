@@ -21,6 +21,7 @@
     "react-native-router-flux": "^4.0.0-beta.28",
     "react-native-scrollable-tab-view": "^0.8.0",
     "react-native-slider": "^0.11.0",
+    "react-native-storage": "^0.2.2",
     "react-native-swipeout": "^2.3.3",
     "react-native-swiper": "^1.5.13",
     "react-native-textinput-effects": "^0.4.2",

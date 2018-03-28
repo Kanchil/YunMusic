@@ -24,11 +24,10 @@ class Register extends Component {
     }
 
     register() {
-        let param = {
-            username: this.state.nickname,
-            password: this.state.password
-        }
-        register(param).then(() => {
+        let formData = new FormData()
+        formData.append('username', this.state.nickname)
+        formData.append('password', this.state.password)
+        register(formData).then(() => {
             Alert.alert('注册成功')
             Actions.pop();
             Actions.login();
