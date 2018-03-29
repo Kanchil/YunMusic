@@ -36,7 +36,9 @@ class Search extends Component {
                         onSubmitEditing={() => this.search(this.state.searchQuery)}
                     />
                 </View>
-                <SearchResults/>
+                <View style={{backgroundColor: '#fff'}}>
+                    <SearchResults/>
+                </View>
             </View>
         );
     }

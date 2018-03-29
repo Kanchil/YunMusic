@@ -9,6 +9,7 @@ import Home from './app/views/home';
 import Login from './app/views/login';
 import Register from './app/views/register';
 import SongList from './app/views/songList';
+import Favorite from './app/views/favorite';
 import Play from './app/views/play';
 import LocalHome from './app/views/localHome';
 import Search from './app/views/search';
@@ -47,6 +48,10 @@ export default class App extends Component {
                     component={ SongList }  
                     title="歌曲列表" 
                     hideNavBar={ false } />
+              <Scene key="favorite" leftButtonIconStyle={{tintColor:'#333'}}
+                     component={Favorite}
+                     title="我的音乐云"
+                     hideNavBar={false}/>
               <Scene key="albumList" 
                     leftButtonIconStyle={{tintColor:'#333'}} 
                     component={AlbumList} 

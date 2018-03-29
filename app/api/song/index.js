@@ -19,3 +19,18 @@ export function getSongsByPosition(position = 0, limit = 10) {
         method: 'get'
     })
 }
+
+/**
+ * 获取收藏的歌曲列表
+ * @param uid
+ * @returns {AxiosPromise}
+ */
+export function getFavoriteSongs(uid) {
+    return getData({
+        url: `/index/getFavoriteSongs`,
+        method: 'get',
+        params: {
+            userId: uid
+        }
+    })
+}

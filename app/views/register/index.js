@@ -38,12 +38,6 @@ class Register extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <TouchableOpacity style={styles.headerClose} onPress={Actions.pop}>
-                        <Icon color="#fff" name="ios-arrow-back-outline" size={36}></Icon>
-                    </TouchableOpacity>
-                    <Text style={styles.headtitle}>账号注册</Text>
-                </View>
                 <View style={styles.marginTopview}/>
                 <View style={styles.inputview}>
                     <TextInput underlineColorAndroid='transparent'

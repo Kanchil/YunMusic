@@ -6,28 +6,41 @@ import {
     ActivityIndicator,
     InteractionManager,
     Image,
-    ImageBackground
+    ImageBackground,
+    Alert
 } from 'react-native';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ActionCreators from '../../actions';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {Actions} from 'react-native-router-flux';
-import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Song from '../../components/song';
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
+import { getFavoriteSongs } from '../../api/song';
+import {styles} from "../songList/index.style";
 
-import {styles} from './index.style';
-import {getSongsByAlbum, getSongsByPosition} from '../../api/song';
-
-class SongList extends Component {
+class Favoriate extends Component {
     constructor(props) {
         super(props);
         this.state = {
             songs: [],
-            listType: props.listType,
-            cid: props.cid,
+            userId: 0,
             isLoading: true
         }
+    }
+
+    // 判断是否已经登录
+    async isLogin() {
+        return await storage.load({
+            key: 'userInfo'
+        }).then(ret => {
+            if (ret.length > 0 && ret[0].uid) {
+                this.setState({userId: ret[0].uid});
+            } else {
+                Alert.alert("您还未登陆！");
+                Actions.login();
+            }
+        })
     }
 
     onPress(song) {
@@ -38,31 +51,22 @@ class SongList extends Component {
         Actions.play({searchedSongs: this.state.songs, songIndex: index, onMusicDownload: this.onPress.bind(this)})
     }
     componentDidMount() {
-        let cid = this.state.cid;
         InteractionManager.runAfterInteractions(() => {
-            if (this.state.listType === 'album') {
-                getSongsByAlbum(cid).then(data => {
+            // TODO: 加载歌曲
+            this.isLogin().then(() => {
+                getFavoriteSongs(this.state.userId).then(data => {
                     this.setState({
                         songs: data,
                         isLoading: false
                     })
+                }).catch(error => {
+                    Alert.alert(error.message)
                 })
-            } else if (this.state.listType === 'position') {
-                getSongsByPosition(cid).then(data => {
-                    this.setState({
-                        songs: data,
-                        isLoading: false
-                    })
-                })
-            }
+            }).catch(() => {
+                Alert.alert("您还未登陆！");
+                Actions.login();
+            })
         })
-
-    }
-
-    renderLoading() {
-        if (this.state.isLoading) {
-            return <ActivityIndicator size="large" color='#4B3E4D' style={{marginTop: 5}}/>
-        }
     }
 
     playAll() {
@@ -70,6 +74,12 @@ class SongList extends Component {
             return false
         }
         Actions.play({searchedSongs: this.state.songs, songIndex: 0, onMusicDownload: this.onPress.bind(this)})
+    }
+
+    renderLoading() {
+        if (this.state.isLoading) {
+            return <ActivityIndicator size="large" color='#4B3E4D' style={{marginTop: 5}}/>
+        }
     }
 
     render() {
@@ -140,4 +150,4 @@ function mapStateToProps(store) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(SongList);
+export default connect(mapStateToProps, mapDispatchToProps)(Favoriate);

@@ -128,8 +128,16 @@ class Play extends Component {
     }
 
     componentDidMount() {
-        //判断是否已收藏
-        this.isFavoriate();
+        storage.load({
+            key: 'userInfo'
+        }).then(ret => {
+            console.log(ret, 'ret')
+            if (ret.length > 0 && ret[0].uid) {
+                this.setState({userId: ret[0].uid});
+                //判断是否已收藏
+                this.isFavoriate();
+            }
+        })
     }
 
     renderVideoPlayer() {
@@ -141,7 +149,7 @@ class Play extends Component {
                     muted={false}
                     ref="audio"
                     paused={!this.state.playing}
-                    playInBackground={true}
+                    playInBackground={false}
                     onLoad={this.onLoad.bind(this)}
                     onProgress={this.setTime.bind(this)}
                     onEnd={this.onEnd.bind(this)}
@@ -215,16 +223,11 @@ class Play extends Component {
             key: 'userInfo'
         }).then(ret => {
             if (ret.length > 0 && ret[0].uid) {
-                this.setState({userId: ret.uid});
+                this.setState({userId: ret[0].uid});
             } else {
                 Alert.alert("您还未登陆！");
-                Actions.pop();
                 Actions.login();
             }
-        }).catch(() => {
-            Alert.alert("您还未登陆！");
-            Actions.pop();
-            Actions.login();
         })
     }
     //取消收藏
@@ -249,6 +252,9 @@ class Play extends Component {
             }).catch(error => {
                 Alert.alert(error.message)
             })
+        }).catch(() => {
+            Alert.alert("您还未登陆！");
+            Actions.login();
         })
     }
     //判断是否已收藏
@@ -273,6 +279,9 @@ class Play extends Component {
             }).catch(error => {
                 Alert.alert(error.message)
             })
+        }).catch(() => {
+            Alert.alert("您还未登陆！");
+            Actions.login();
         })
     }
     //收藏
@@ -297,6 +306,9 @@ class Play extends Component {
             }).catch(error => {
                 Alert.alert(error.message)
             })
+        }).catch(() => {
+            Alert.alert("您还未登陆！");
+            Actions.login();
         })
     }
 

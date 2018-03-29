@@ -7,9 +7,7 @@ import {Actions} from 'react-native-router-flux';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ActionCreators from '../../actions';
-import * as Progress from 'react-native-progress';
 import Song from '../../components/song';
-import * as Utils from '../../helpers/utils';
 
 class SearchResults extends Component {
     onPress(song) {
